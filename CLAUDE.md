@@ -2,6 +2,15 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## CRITICAL: Documentation-First Rule
+
+**Before generating ANY code, Claude Code MUST first read and refer to the relevant documentation files in the `/docs` directory.** The docs contain project-specific guidelines, patterns, and specifications that take precedence over general knowledge. Always check `/docs` for applicable guidance before writing or modifying code.
+
+Current docs:
+- `docs/ui.md` — UI component guidelines and patterns
+
+If a relevant doc exists for the area of code being worked on, its instructions MUST be followed.
+
 ## Project Overview
 
 This is a Next.js 16 application called "liftingdiarycourse" (a lifting diary course project) built with TypeScript, React 19, and Tailwind CSS v4. The project uses the modern Next.js App Router architecture with Clerk authentication.
