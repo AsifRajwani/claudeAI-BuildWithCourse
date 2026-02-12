@@ -8,6 +8,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Current docs:
 - `docs/ui.md` — UI component guidelines and patterns
+- `docs/data-fetching.md` — Data fetching rules and database query patterns
 
 If a relevant doc exists for the area of code being worked on, its instructions MUST be followed.
 
