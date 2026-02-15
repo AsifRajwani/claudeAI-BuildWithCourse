@@ -112,3 +112,26 @@ export async function getWorkoutsByDate(
     exercises: Array.from(exerciseMap.values()),
   }));
 }
+
+export async function createWorkout(
+  userId: string,
+  data: {
+    title?: string;
+    notes?: string;
+    status: string;
+    startedAt: Date;
+  }
+) {
+  const [workout] = await db
+    .insert(workouts)
+    .values({
+      userId,
+      title: data.title || null,
+      notes: data.notes || null,
+      status: data.status,
+      startedAt: data.startedAt,
+    })
+    .returning();
+
+  return workout;
+}
