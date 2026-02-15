@@ -94,6 +94,7 @@ export async function createWorkoutAction(params: { startedAt: Date }) {
 - Pass `userId` to the data helper — never let the data layer handle auth.
 - Call `revalidatePath` or `revalidateTag` after successful mutations to keep the UI in sync.
 - Keep actions focused — one mutation per function.
+- **Do NOT** call `redirect()` inside server actions. Redirects MUST be handled client-side after the server action call resolves (e.g. using `router.push()` in the calling component).
 
 ## Calling Server Actions from Components
 
@@ -121,3 +122,4 @@ export function CreateWorkoutButton({ date }: { date: Date }) {
 - **Do NOT** put server actions in `page.tsx` or component files — use a separate `actions.ts`.
 - **Do NOT** use API routes (`route.ts`) for mutations.
 - **Do NOT** call `auth()` inside data helpers — pass `userId` in explicitly.
+- **Do NOT** call `redirect()` inside server actions — handle redirects client-side after the action resolves.

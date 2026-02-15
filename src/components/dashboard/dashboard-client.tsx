@@ -33,11 +33,20 @@ function formatExerciseSummary(sets: WorkoutExercise["sets"]): string {
   return `${sets.length} ${sets.length === 1 ? "set" : "sets"}`;
 }
 
+function formatStatus(status: string): string {
+  switch (status) {
+    case "in_progress":
+      return "In Progress";
+    case "completed":
+      return "Completed";
+    default:
+      return "Planned";
+  }
+}
+
 export function DashboardClient({ workouts, dateKey }: DashboardClientProps) {
   const router = useRouter();
   const date = parseISO(dateKey);
-
-  const exercises = workouts.flatMap((w) => w.exercises);
 
   return (
     <main className="mx-auto max-w-5xl p-6">
@@ -70,7 +79,7 @@ export function DashboardClient({ workouts, dateKey }: DashboardClientProps) {
             Workouts for {format(date, "do MMM yyyy")}
           </h3>
 
-          {exercises.length === 0 ? (
+          {workouts.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                 <Dumbbell className="mb-4 size-10 text-muted-foreground" />
@@ -81,17 +90,30 @@ export function DashboardClient({ workouts, dateKey }: DashboardClientProps) {
               </CardContent>
             </Card>
           ) : (
-            <div className="space-y-3">
-              {exercises.map((exercise) => (
-                <Card key={exercise.workoutExerciseId}>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">
-                      {exercise.exerciseName}
-                    </CardTitle>
-                    <CardDescription>
-                      {formatExerciseSummary(exercise.sets)}
-                    </CardDescription>
+            <div className="space-y-4">
+              {workouts.map((workout) => (
+                <Card key={workout.id}>
+                  <CardHeader>
+                    <CardTitle>{workout.title || "Untitled Workout"}</CardTitle>
+                    <CardDescription>{formatStatus(workout.status)}</CardDescription>
                   </CardHeader>
+                  {workout.exercises.length > 0 && (
+                    <CardContent className="space-y-2">
+                      {workout.exercises.map((exercise) => (
+                        <div
+                          key={exercise.workoutExerciseId}
+                          className="flex items-center justify-between rounded-md border px-3 py-2"
+                        >
+                          <span className="font-medium">
+                            {exercise.exerciseName}
+                          </span>
+                          <span className="text-sm text-muted-foreground">
+                            {formatExerciseSummary(exercise.sets)}
+                          </span>
+                        </div>
+                      ))}
+                    </CardContent>
+                  )}
                 </Card>
               ))}
             </div>
