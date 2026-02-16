@@ -112,3 +112,53 @@ export async function getWorkoutsByDate(
     exercises: Array.from(exerciseMap.values()),
   }));
 }
+
+export async function getWorkoutById(userId: string, workoutId: string) {
+  const result = await db
+    .select()
+    .from(workouts)
+    .where(and(eq(workouts.id, workoutId), eq(workouts.userId, userId)));
+  return result[0];
+}
+
+export async function updateWorkout(
+  userId: string,
+  workoutId: string,
+  data: {
+    title?: string | null;
+    notes?: string | null;
+    status?: string;
+    startedAt?: Date;
+  }
+) {
+  const [workout] = await db
+    .update(workouts)
+    .set(data)
+    .where(and(eq(workouts.id, workoutId), eq(workouts.userId, userId)))
+    .returning();
+
+  return workout;
+}
+
+export async function createWorkout(
+  userId: string,
+  data: {
+    title?: string;
+    notes?: string;
+    status: string;
+    startedAt: Date;
+  }
+) {
+  const [workout] = await db
+    .insert(workouts)
+    .values({
+      userId,
+      title: data.title || null,
+      notes: data.notes || null,
+      status: data.status,
+      startedAt: data.startedAt,
+    })
+    .returning();
+
+  return workout;
+}
