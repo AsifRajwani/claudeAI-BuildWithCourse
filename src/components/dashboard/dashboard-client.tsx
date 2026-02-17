@@ -113,29 +113,34 @@ export function DashboardClient({ workouts, dateKey }: DashboardClientProps) {
           ) : (
             <div className="space-y-4">
               {workouts.map((workout) => (
-                <Card key={workout.id}>
-                  <CardHeader>
-                    <CardTitle>{workout.title || "Untitled Workout"}</CardTitle>
-                    <CardDescription>{formatStatus(workout.status)}</CardDescription>
-                  </CardHeader>
-                  {workout.exercises.length > 0 && (
-                    <CardContent className="space-y-2">
-                      {workout.exercises.map((exercise) => (
-                        <div
-                          key={exercise.workoutExerciseId}
-                          className="flex items-center justify-between rounded-md border px-3 py-2"
-                        >
-                          <span className="font-medium">
-                            {exercise.exerciseName}
-                          </span>
-                          <span className="text-sm text-muted-foreground">
-                            {formatExerciseSummary(exercise.sets)}
-                          </span>
-                        </div>
-                      ))}
-                    </CardContent>
-                  )}
-                </Card>
+                <Link
+                  key={workout.id}
+                  href={`/dashboard/workout/${workout.id}`}
+                >
+                  <Card className="transition-colors hover:bg-accent/50">
+                    <CardHeader>
+                      <CardTitle>{workout.title || "Untitled Workout"}</CardTitle>
+                      <CardDescription>{formatStatus(workout.status)}</CardDescription>
+                    </CardHeader>
+                    {workout.exercises.length > 0 && (
+                      <CardContent className="space-y-2">
+                        {workout.exercises.map((exercise) => (
+                          <div
+                            key={exercise.workoutExerciseId}
+                            className="flex items-center justify-between rounded-md border px-3 py-2"
+                          >
+                            <span className="font-medium">
+                              {exercise.exerciseName}
+                            </span>
+                            <span className="text-sm text-muted-foreground">
+                              {formatExerciseSummary(exercise.sets)}
+                            </span>
+                          </div>
+                        ))}
+                      </CardContent>
+                    )}
+                  </Card>
+                </Link>
               ))}
             </div>
           )}
