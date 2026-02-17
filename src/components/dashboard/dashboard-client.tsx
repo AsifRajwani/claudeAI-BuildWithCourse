@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
-import { Dumbbell } from "lucide-react";
+import { CalendarIcon, Dumbbell, Plus } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -11,6 +13,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import type { WorkoutWithExercises, WorkoutExercise } from "@/data/workouts";
 
 interface DashboardClientProps {
@@ -47,37 +55,50 @@ function formatStatus(status: string): string {
 export function DashboardClient({ workouts, dateKey }: DashboardClientProps) {
   const router = useRouter();
   const date = parseISO(dateKey);
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   return (
     <main className="mx-auto max-w-5xl p-6">
       <h2 className="mb-6 text-2xl font-bold">Workout Dashboard</h2>
 
-      <div className="flex flex-col gap-8 md:flex-row md:items-start">
-        {/* Left side: Calendar */}
-        <div className="shrink-0">
-          <h3 className="mb-3 text-lg font-semibold">Select Date</h3>
-          <Card>
-            <CardContent className="p-2">
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={(d) => {
-                  if (d) {
-                    router.push(
-                      `/dashboard?date=${format(d, "yyyy-MM-dd")}`
-                    );
-                  }
-                }}
-              />
-            </CardContent>
-          </Card>
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h3 className="text-lg font-semibold">
+              Workouts for {format(date, "do MMM yyyy")}
+            </h3>
+            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" size="sm">
+                  <CalendarIcon className="mr-2 size-4" />
+                  {format(date, "do MMM yyyy")}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-2" align="start">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={(d) => {
+                    if (d) {
+                      setCalendarOpen(false);
+                      router.push(
+                        `/dashboard?date=${format(d, "yyyy-MM-dd")}`
+                      );
+                    }
+                  }}
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+          <Button asChild>
+            <Link href="/dashboard/workout/new">
+              <Plus className="mr-2 size-4" />
+              Log New Workout
+            </Link>
+          </Button>
         </div>
 
-        {/* Right side: Workouts */}
-        <div className="flex-1">
-          <h3 className="mb-3 text-lg font-semibold">
-            Workouts for {format(date, "do MMM yyyy")}
-          </h3>
+        <div>
 
           {workouts.length === 0 ? (
             <Card>
